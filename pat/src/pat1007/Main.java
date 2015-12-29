@@ -2,53 +2,86 @@ package pat1007;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-
+//动态规划
 public class Main {
 
 	public static void main(String[] args) {
 		Scanner input = new Scanner(System.in);
 		int K = input.nextInt();
-		int[][] sum = new int[K][K];
-		boolean key = true;
-		//ArrayList<Integer> numbers = new ArrayList<Integer>();
-		for (int i = 0; i < K; i++){
-			//numbers.add(input.nextInt());
-			sum[i][i] = input.nextInt();
-			if (sum[i][i] >= 0)
-				key = false;
-		}
-		/*for (int i : numbers){
-			if (i >= 0)
-			{
-				key = false;
-				break;
-			}
-		}*/
-		if (key)
-			System.out.println(0 + " " + 0 + " " +(K - 1));
-		else{
-			int j = 0;
-			//int[][] sum = new int[K][K];
-			int indexFirst = 0, indexLast = 0, maxSum = Integer.MIN_VALUE;
-			/*for (int i : numbers){
-				sum[j][j] = i;
-				j++;
-			}*/
-			//j = 0;
-			for (int i = 0; i < K; i++){
-				for (j = i; j < K; j++){
-					if (i != j)
-						sum[i][j] = sum[i][j - 1] + sum[j][j];
-					if (maxSum < sum[i][j]){
-						maxSum = sum[i][j];
-						indexFirst = i;
-						indexLast = j;
-					}
-				}
-			}
-			System.out.println(maxSum + " " + sum[indexFirst][indexFirst] + " " + sum[indexLast][indexLast]);
+		ArrayList<Node> numbers = new ArrayList<Node>(K);
+		boolean flag = false;
+		for (int i = 0; i < K; ++i){
+			int temp = input.nextInt();
+			numbers.add(new Node(temp));
+			if (temp >= 0)
+				flag = true;
 		}
 		input.close();
+		if (!flag){
+			System.out.println(0 + " " + numbers.get(0).getNum() + " " + numbers.get(K-1).getNum());
+			return;
+		}
+		numbers.get(0).setStart(0);
+		numbers.get(0).setSum(numbers.get(0).getNum());
+		for (int i = 1; i < K; ++i){
+			if (numbers.get(i-1).getSum() < 0){
+				numbers.get(i).setStart(i);
+				numbers.get(i).setSum(numbers.get(i).getNum());
+			}else{
+				numbers.get(i).setStart(numbers.get(i-1).getStart());
+				numbers.get(i).setSum(numbers.get(i-1).getSum() + numbers.get(i).getNum());
+			}
+		}
+		int sum = numbers.get(0).getSum();
+		int index = 0;
+		for (int i = 1; i < K; ++i){
+			if(numbers.get(i).getSum() > sum){
+				sum = numbers.get(i).getSum();
+				index = i;
+			}
+		}
+		System.out.println(numbers.get(index).getSum() + " " + numbers.get(numbers.get(index).getStart()).getNum() + " " + numbers.get(index).getNum());
 	}
 
+}
+
+class Node{
+	
+	private int num;
+	private int sum;
+	private int start;
+	
+	public Node(){
+		num = 0;
+		sum = 0;
+		start = 0;
+	}
+	public Node(int num){
+		this.num = num;
+		sum = 0;
+		start = 0;
+	}
+	
+	public int getSum(){
+		return sum;
+	}
+	public void setSum(int sum){
+		this.sum = sum;
+	}
+	
+	
+	public int getStart() {
+		return start;
+	}
+	public void setStart(int start) {
+		this.start = start;
+	}
+	
+	public int getNum() {
+		return num;
+	}
+	public void setNum(int num) {
+		this.num = num;
+	}
+	
 }
