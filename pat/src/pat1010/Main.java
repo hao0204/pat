@@ -16,11 +16,10 @@ public class Main {
 		else if (tag == 2)
 			getRadix(N2, radix, N1);
 		input.close();
-		//System.out.println("aa");
 	}
 	
 	static void getRadix(String N1, int radix, String N2){
-		double sum1 = 0, sum2 = 0, sum3 = 0;
+		double sum1 = 0, sum2 = 0;
 		double k1 = 1, k2 = 0, radix2 = 0, k3 = 0;
 		for (int i = N1.length()-1; i >= 0; --i){
 			if ( Character.isLetter(N1.charAt(i))){
@@ -39,17 +38,14 @@ public class Main {
 			if (radix2 < k3)
 				radix2 = k3;
 		}
-		do{
-			++radix2;
-			k2 = 1;
-			sum3 = sum2;
+		double low = radix2 +1;
+		double high = sum1 > low? (sum1+1): (low+1);
+		for (; low < high;){
+			radix2 = (int)((low + high) / 2);
 			sum2 = 0;
-			if (N2.length() == 1){
-				sum2 = Character.isLetter(N2.charAt(0))?N2.charAt(0) - 'a' + 10: N2.charAt(0)-'0';
-				break;
-			}
+			k2 = 1;
 			for (int i = N2.length()-1; i >= 0; --i){
-				if ( Character.isLetter(N2.charAt(i))){
+				if (Character.isLetter(N2.charAt(i))){
 					sum2 = sum2 + (N2.charAt(i) - 'a' + 10) * k2;
 					k2 *= radix2;
 				}else if (Character.isDigit(N2.charAt(i))){
@@ -57,15 +53,17 @@ public class Main {
 					k2 *= radix2;
 				}
 			}
-			//System.out.println(sum2);
-			//System.out.println(sum2 > sum1 && sum3 < sum1);
-			
-		}while(!(sum2 == sum1 || (sum2 > sum1 && sum3 < sum1)));
-		if (sum2 == sum1)
+			if (sum2 > sum1){
+				high = radix2;
+			}else if (sum2 < sum1){
+				low = radix2;
+			}else
+				break;
+		}
+		if (sum1 == sum2)
 			System.out.println((int)radix2);
 		else
 			System.out.println("Impossible");
-		
 	}
 
 }
