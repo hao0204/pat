@@ -1,5 +1,5 @@
 package pat1012;
-
+//最后一个case运行超时
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -23,29 +23,24 @@ public class Main {
 		rank(1, students);
 		rank(2, students);
 		rank(3, students);
-//		for(Student a: students){
-//			for (int i = 0; i < 4; i++)
-//				System.out.print(a.getRankGrades()[i]);
-//			System.out.print("\n");
-//		}
 		ArrayList<String> IDs = new ArrayList<String>();
-		int max = Integer.MIN_VALUE;
-		int max_course = -1;
+		int min = Integer.MIN_VALUE;
+		int min_course = -1;
 		String name = "ACME";
 		for (Student a: students)
 			IDs.add(a.getID());
 		for (int i = 0; i < M; i++){
 			String str = input.next();
-			//System.out.println("str="+str);
-			max = Integer.MIN_VALUE;
-			max_course = -1;
+			min = Integer.MAX_VALUE;
+			min_course = -1;
 			if (IDs.indexOf(str) != -1){
-				for (int j = 0; j < 4; ++j)
-					if (max < students.get(i).getRankGrades()[j]){
-						max = students.get(i).getRankGrades()[j];
-						max_course = j;
+				for (int j = 0; j < 4; ++j){
+					if (min > students.get(IDs.indexOf(str)).getRankGrades()[j]){
+						min = students.get(IDs.indexOf(str)).getRankGrades()[j];
+						min_course = j;
 					}
-				System.out.println( (5-max) + " " + name.charAt(max_course));
+				}
+				System.out.println(min + " " + name.charAt(min_course));
 			}else{
 				System.out.println("N/A");
 			}
@@ -58,9 +53,9 @@ public class Main {
 			num.add(a.getGrades()[k]);
 		}
 		Collections.sort(num);
-		//System.out.println(num);
+		Collections.reverse(num);
 		for(int i = 0; i < students.size(); i++){
-			students.get(i).setRankGrades((num.indexOf(students.get(i).getGrades()[k])), k);
+			students.get(i).setRankGrades((num.indexOf(students.get(i).getGrades()[k]) + 1), k);
 		}
 	}
 
